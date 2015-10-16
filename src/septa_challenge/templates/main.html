@@ -1,0 +1,136 @@
+{% load static %}
+<html>
+    <head>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+        <style>
+
+body {
+    background-color: #ecf0f1;
+}
+.container {
+    background-color: white;
+    min-height: 800px;
+}
+
+.navbar-default {
+    background-color: #394ba3;
+    background-image: none;
+    background-repeat: no-repeat;
+}
+.navbar-default .navbar-brand {
+    color: #ecf0f1;
+}
+.navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus {
+    color: #ffffff;
+}
+.navbar-default .navbar-text {
+    color: #ecf0f1;
+}
+.navbar-default .navbar-nav > li > a {
+    color: #ecf0f1;
+}
+.navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
+    color: #ffffff;
+}
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
+    color: #ffffff;
+    background-color: #000000;
+}
+.navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
+    color: #ffffff;
+    background-color: #000000;
+}
+.navbar-default .navbar-toggle {
+    border-color: #000000;
+}
+.navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {
+    background-color: #000000;
+}
+.navbar-default .navbar-toggle .icon-bar {
+    background-color: #ecf0f1;
+}
+.navbar-default .navbar-collapse,
+.navbar-default .navbar-form {
+    border-color: #ecf0f1;
+}
+.navbar-default .navbar-link {
+    color: #ecf0f1;
+}
+.navbar-default .navbar-link:hover {
+    color: #ffffff;
+}
+
+select {
+  margin: 0 20px 0 20px;
+}
+
+.error {
+  color: red;
+  opacity: 0.8;
+}
+
+@media (max-width: 767px) {
+    .navbar-default .navbar-nav .open .dropdown-menu > li > a {
+        color: #ecf0f1;
+    }
+    .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
+        color: #ffffff;
+    }
+    .navbar-default .navbar-nav .open .dropdown-menu > .active > a, .navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus {
+        color: #ffffff;
+        background-color: #000000;
+    }
+}
+        </style>
+    </head>
+    <body>
+        <nav class="navbar navbar-default navbar-static-top">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">SEPTA Tracker 9000</a>
+                </div>
+            </div>
+        </nav>
+        <div class="container" style="background-color: white">
+            <h2>
+                Train Status
+            </h2>
+            <div class="panel">
+              <form class="" action="/schedule/" method="POST">
+                {% csrf_token %}
+                {{ form }}
+                <input type="submit" value ="Go!" />
+              </form>
+
+              {% if errors %}
+                <span class="error">{{ errors }}</span>
+              {% endif %}
+
+              {% if schedule %}
+                <h2>{{ schedule.direction }} trains from {{ station }}</h2>
+
+                <table class="table">
+                  <tr>
+                    <th>Train ID</th>
+                    <th>On Time?</th>
+                    <th>Scheduled Time</th>
+                    <th>Depart time</th>
+                  </tr>
+
+                  {% for trip in schedule.trips %}
+                    <tr>
+                      <td>{{ trip.id }}</td>
+                      <td>{{ trip.on_time | yesno:"yes,no,maybe" }}</td>
+                      <td>{{ trip.sched_time }}</td>
+                      <td>{{ trip.depart_time }}</td>
+                    </tr>
+                  {% endfor %}
+                </table>
+              {% endif %}
+
+            </div>
+        </div>
+    </body>
+</html>
